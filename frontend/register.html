@@ -24,7 +24,6 @@
   <script>
     let correctCaptcha = 0;
 
-    // Load CAPTCHA
     fetch('http://localhost:3000/auth/captcha')
       .then(res => res.json())
       .then(data => {
@@ -57,7 +56,8 @@
       document.getElementById('registerMessage').innerText = result.message;
 
       if (res.ok) {
-        alert('✅ Registered! Check console for OTP.');
+        alert(`📲 Your OTP is: ${result.otp}`);
+        localStorage.setItem('otpPhone', payload.phone);
         window.location.href = 'verify-otp.html';
       }
     });

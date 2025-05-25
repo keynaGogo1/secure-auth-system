@@ -5,21 +5,22 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>🔐 Verify Phone Number</h2>
+  <h2>📲 Verify OTP</h2>
   <form id="otpForm">
-    <input type="text" id="phone" placeholder="Phone Number" required><br>
-    <input type="text" id="otp" placeholder="Enter OTP" required><br>
+    <input type="number" id="otp" placeholder="Enter OTP" required><br>
     <button type="submit">Verify</button>
   </form>
 
   <p id="otpMessage"></p>
 
   <script>
+    const phone = localStorage.getItem('otpPhone');
+
     document.getElementById('otpForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const payload = {
-        phone: document.getElementById('phone').value,
+        phone: phone,
         otp: document.getElementById('otp').value
       };
 
@@ -31,11 +32,6 @@
 
       const result = await res.json();
       document.getElementById('otpMessage').innerText = result.message;
-
-      if (res.ok) {
-        alert('✅ Phone number verified!');
-        window.location.href = 'login.html';
-      }
     });
   </script>
 </body>
