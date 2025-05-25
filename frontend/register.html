@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>📋 Register</h2>
+  <form id="registerForm">
+    <input type="text" id="username" placeholder="Username" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <input type="text" id="phone" placeholder="Phone Number" required><br>
+
+    <div id="captchaSection">
+      <p id="captchaQuestion">Loading CAPTCHA...</p>
+      <input type="number" id="captchaAnswer" placeholder="Answer" required><br>
+    </div>
+
+    <button type="submit">Register</button>
+  </form>
+
+  <p id="registerMessage"></p>
+
+  <script>
+    let correctCaptcha = 0;
+
+    // Load CAPTCHA
+    fetch('http://localhost:3000/auth/captcha')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('captchaQuestion').innerText = data.question;
+        correctCaptcha = data.answer;
+      });
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const userCaptcha = parseInt(document.getElementById('captchaAnswer').value);
+      if (userCaptcha !== correctCaptcha) {
+        alert('Wrong CAPTCHA! Try again.');
+        return;
+      }
+
+      const payload = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        phone: document.getElementById('phone').value
+      };
+
+      const res = await fetch('http://localhost:3000/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await res.json();
+      document.getElementById('registerMessage').innerText = result.message;
+
+      if (res.ok) {
+        alert('✅ Registered! Check console for OTP.');
+        window.location.href = 'verify-otp.html';
+      }
+    });
+  </script>
+</body>
+</html>

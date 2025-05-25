@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>🔐 User Login</h2>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Username" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button type="submit">Login</button>
+  </form>
+
+  <p id="loginMessage"></p>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
+      };
+
+      const res = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await res.json();
+      document.getElementById('loginMessage').innerText = result.message;
+
+      if (res.ok) {
+        alert('✅ Login successful!');
+      } else {
+        alert('❌ Login failed: ' + result.message);
+      }
+    });
+  </script>
+</body>
+</html>

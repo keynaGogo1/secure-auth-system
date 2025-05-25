@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verify OTP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>🔐 Verify Phone Number</h2>
+  <form id="otpForm">
+    <input type="text" id="phone" placeholder="Phone Number" required><br>
+    <input type="text" id="otp" placeholder="Enter OTP" required><br>
+    <button type="submit">Verify</button>
+  </form>
+
+  <p id="otpMessage"></p>
+
+  <script>
+    document.getElementById('otpForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        phone: document.getElementById('phone').value,
+        otp: document.getElementById('otp').value
+      };
+
+      const res = await fetch('http://localhost:3000/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await res.json();
+      document.getElementById('otpMessage').innerText = result.message;
+
+      if (res.ok) {
+        alert('✅ Phone number verified!');
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</body>
+</html>
